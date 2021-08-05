@@ -1,5 +1,5 @@
 import sqlite3
-
+#   CRUD bazy danych
 
 class User:
     def __init__(self):
