@@ -6,3 +6,4 @@ python-dotenv
 flask-shell-ipython
 sqlalchemy
 flask_wtf
+email_validator
