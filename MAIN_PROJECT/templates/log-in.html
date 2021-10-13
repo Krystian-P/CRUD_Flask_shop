@@ -2,7 +2,7 @@
 {% block content %}
 <div>
     <h2> Podaj Login oraz Hasło: </h2>
-    <form method="POST" action="/todos/">
+    <form method="POST" action="/user-profile.html">
         {{ login_form.hidden_tag() }}
         <table>
             {% for field in login_form if field.widget.input_type != 'hidden' %}
@@ -12,7 +12,6 @@
                 </tr>
             {% endfor %}
         </table>
-        <input type="submit" value="Go">
     </form>
 </div>
 

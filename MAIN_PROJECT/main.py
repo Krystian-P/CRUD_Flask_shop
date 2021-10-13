@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from forms import *
 from models import User
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "kokokokkok"
+app.config["SECRET_KEY"] = "Upikajej"
 
 
 @app.route("/")
@@ -12,12 +12,12 @@ def welcome_page():     #Strona startowa
 
 @app.route("/login", methods=["GET", "POST"])
 def login_page():       # Strona logowania
-    form=LogIn()
-    error=""
-    if request.method == 'POST' and form.validate_on_submit():
+    loginform = LogIn()
+    error = ""
+    if request.method == 'POST' and loginform.validate_on_submit():
         user= User
         return redirect(url_for("user_profile_page"))
-    return render_template("log-in.html", login_form=form)
+    return render_template("log-in.html", login_form=loginform)
 
 
 @app.route("/sing-in", methods=["GET", "POST"])
