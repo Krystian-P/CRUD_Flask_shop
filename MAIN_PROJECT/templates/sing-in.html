@@ -7,19 +7,55 @@
             <legend class="border-bottom mb-4">Join Today</legend>
             <div class="form-group">
                 {{ signin_form.Login.label(class="form-control-label")}}
-                {{ signin_form.Login(class="form-control form-control-lg") }}
+                {% if signin_form.Login.errors %}
+                    {{ signin_form.Login(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in signin_form.Login.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ signin_form.Login(class="form-control form-control-lg") }}
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ signin_form.Password.label(class="form-control-label")}}
-                {{ signin_form.Password(class="form-control form-control-lg") }}
+                {% if signin_form.Password.errors %}
+                    {{ signin_form.Password(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in signin_form.Password.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ signin_form.Password(class="form-control form-control-lg") }}
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ signin_form.Repeat_Password.label(class="form-control-label")}}
-                {{ signin_form.Repeat_Password(class="form-control form-control-lg") }}
+                {% if signin_form.Repeat_Password.errors %}
+                    {{ signin_form.Repeat_Password(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in signin_form.Repeat_Password.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ signin_form.Repeat_Password(class="form-control form-control-lg") }}
+                {% endif %}
             </div>
             <div class="form-group">
                 {{ signin_form.Email.label(class="form-control-label")}}
-                {{ signin_form.Email(class="form-control form-control-lg") }}
+                {% if signin_form.Email.errors %}
+                    {{ signin_form.Email(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in signin_form.Email.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ signin_form.Email(class="form-control form-control-lg") }}
+                {% endif %}
             </div>
         </fieldset>
         <div class="form-group">

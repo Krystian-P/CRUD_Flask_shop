@@ -5,7 +5,7 @@ from email_validator import validate_email
 
 class LogIn(FlaskForm):
     #formularz logowania
-    Login = TextField("Login", validators=[DataRequired()])
+    Email = TextField("Email", validators=[DataRequired(), Length(min=4), Email()])
     Password = PasswordField("Password", validators=[DataRequired()])
     remember = BooleanField('Remember me')
     submit = SubmitField('LogIn')

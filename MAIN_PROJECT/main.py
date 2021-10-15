@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from forms import *
 from models import User
 app = Flask(__name__)
@@ -15,8 +15,11 @@ def login_page():       # Strona logowania
     loginform = LogIn()
     error = ""
     if request.method == 'POST' and loginform.validate_on_submit():
-        user= User
-        return redirect(url_for("user_profile_page"))
+        if loginform.Email.data == 'admin@wp.pl' and loginform.Password.data == 'pass':
+            flash('You have been logged in!', 'success')
+            return redirect(url_for('welcome_page'))
+        else:
+            flash('Login unsuccessful. Pleas check email and password', 'danger')
     return render_template("log-in.html", login_form=loginform)
 
 
@@ -25,8 +28,9 @@ def sing_in_page():     # Strona rejestracji
     form=SignIn()
     error=""
     if request.method == 'POST' and form.validate_on_submit():
-        user= User
-        return redirect(url_for("login_page"))
+        flash(f'Account created for {form.Login.data}!', 'success')
+        user = User
+        return redirect(url_for("welcome_page"))
     return render_template("sing-in.html", signin_form=form)
 
 
