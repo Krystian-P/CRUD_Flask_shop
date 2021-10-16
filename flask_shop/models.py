@@ -1,4 +1,4 @@
-from app import db
+from flask_shop import db
 # moduł do wprowadzania zmian w strukturze bazy danech
 
 class Users(db.Model):      # baza danych przechowyje dane każdego z urztkowników, hasło będzie zakodowane
@@ -7,5 +7,9 @@ class Users(db.Model):      # baza danych przechowyje dane każdego z urztkownik
     password = db.Column(db.String(40), index=True, unique=True)
     email= db.Column(db.String(50), index=True, unique=True)
 
-    def __str__(self):
-        return f"User: {self.login}" # Po wywołaniu zwraca login urzytkownika
+    def __repr__(self):
+        return f"User: ({self.login},{self.email})" # Po wywołaniu zwraca login urzytkownika
+
+
+class User:
+    pass

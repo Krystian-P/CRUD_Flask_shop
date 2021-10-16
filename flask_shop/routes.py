@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from forms import *
-from models import User
+from flask_shop.forms import LogIn, SignIn
+from flask_shop.models import User
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "Upikajej"
 
