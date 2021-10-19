@@ -7,3 +7,5 @@ flask-shell-ipython
 sqlalchemy
 flask_wtf
 email_validator
+flask_bcrypt
+flask_login

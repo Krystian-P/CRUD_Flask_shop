@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_shop import app, db, bcrypt
 from flask_shop.forms import LogIn, SignIn
 from flask_shop.models import User
-app = Flask(__name__)
-app.config["SECRET_KEY"] = "Upikajej"
+from flask_login import login_user,current_user, logout_user, login_required
+
 
 
 @app.route("/")
@@ -12,11 +13,13 @@ def welcome_page():     #Strona startowa
 
 @app.route("/login", methods=["GET", "POST"])
 def login_page():       # Strona logowania
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     loginform = LogIn()
-    error = ""
     if request.method == 'POST' and loginform.validate_on_submit():
-        if loginform.Email.data == 'admin@wp.pl' and loginform.Password.data == 'pass':
-            flash('You have been logged in!', 'success')
+        user = User.query.filter_by(email= loginform.Email.data).first()
+        if user and bcrypt.check_password_hash(user.password, loginform.Password.data):
+            login_user(user, remember=loginform.remember.data)
             return redirect(url_for('welcome_page'))
         else:
             flash('Login unsuccessful. Pleas check email and password', 'danger')
@@ -25,19 +28,19 @@ def login_page():       # Strona logowania
 
 @app.route("/sing-in", methods=["GET", "POST"])
 def sing_in_page():     # Strona rejestracji
-    form=SignIn()
-    error=""
+    if current_user.is_authenticated:
+        return redirect(url_for('welcome_page'))
+    form = SignIn()
     if request.method == 'POST' and form.validate_on_submit():
-        flash(f'Account created for {form.Login.data}!', 'success')
-        user = User
-        return redirect(url_for("welcome_page"))
-    return render_template("sing-in.html", signin_form=form)
+        hashed_password = bcrypt.generate_password_hash(form.Password.data).decode('utf-8')
+        user = User(login = form.Login.data, email=form.Email.data, password=form.Password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash(f'Your  account has been created!', 'success')
+        return redirect(url_for('login_page'))
+    return render_template("sing-in.html", title='Register', signin_form=form)
 
 
 @app.route("/user-profile.html", methods=["GET", "POST"])
 def user_profile_page():       # Dane urzytkownika
     return render_template("user-profile.html")
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
