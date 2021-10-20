@@ -16,9 +16,9 @@ def login_page():       # Strona logowania
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     loginform = LogIn()
-    if request.method == 'POST' and loginform.validate_on_submit():
+    if loginform.validate_on_submit():
         user = User.query.filter_by(email= loginform.Email.data).first()
-        if user and bcrypt.check_password_hash(user.password, loginform.Password.data):
+        if user is not None and bcrypt.check_password_hash(user.password, loginform.Password.data):
             login_user(user, remember=loginform.remember.data)
             return redirect(url_for('welcome_page'))
         else:
@@ -31,9 +31,9 @@ def sing_in_page():     # Strona rejestracji
     if current_user.is_authenticated:
         return redirect(url_for('welcome_page'))
     form = SignIn()
-    if request.method == 'POST' and form.validate_on_submit():
+    if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.Password.data).decode('utf-8')
-        user = User(login = form.Login.data, email=form.Email.data, password=form.Password.data)
+        user = User(login = form.Login.data, password=hashed_password, email=form.Email.data)
         db.session.add(user)
         db.session.commit()
         flash(f'Your  account has been created!', 'success')
@@ -44,3 +44,6 @@ def sing_in_page():     # Strona rejestracji
 @app.route("/user-profile.html", methods=["GET", "POST"])
 def user_profile_page():       # Dane urzytkownika
     return render_template("user-profile.html")
+
+if __name__ == '__main__':
+    app.run(debug=True)

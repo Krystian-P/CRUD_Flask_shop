@@ -41,8 +41,17 @@
             </small>
         </fieldset>
         <div class="form-group">
-            {{ login_form.submit(class="btn btn-outline-info")}}
-        </div>
+                {{ login_form.submit(class="btn btn-outline-info") }}
+            </div>
+            <small class="text-muted ml-2">
+                <a href="#">Forgot Password?</a>
+            </small>
+        </form>
+    </div>
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            Need An Account? <a class="ml-2" href="{{ url_for('sing_in_page') }}">Sign Up Now</a>
+        </small>
     </form>
 </div>
 
