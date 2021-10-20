@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms.validators import *
 from wtforms import *
-from flask_shop.models import User
+from app.models import User
 from email_validator import validate_email
 
 class LogIn(FlaskForm):

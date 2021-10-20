@@ -1,1 +1,1 @@
-from flask_shop import app
+from app import app
