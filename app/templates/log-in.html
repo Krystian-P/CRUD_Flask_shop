@@ -3,45 +3,45 @@
 <div>
     <h2> Podaj Login oraz Hasło: </h2>
     <form method="POST" action="">
-        {{ login_form.hidden_tag() }}
+        {{ form.hidden_tag() }}
         <fieldset class="form-group">
             <legend class="border-bottom mb-4">Log In</legend>
             <div class="form-group">
-                {{ login_form.Email.label(class="form-control-label")}}
-                {% if login_form.Email.errors %}
-                    {{ login_form.Email(class="form-control form-control-lg is-invalid") }}
+                {{ form.Email.label(class="form-control-label")}}
+                {% if form.Email.errors %}
+                    {{ form.Email(class="form-control form-control-lg is-invalid") }}
                     <div class="invalid-feedback">
-                        {% for error in login_form.Email.errors %}
+                        {% for error in form.Email.errors %}
                             <span>{{ error }}</span>
                         {% endfor %}
                     </div>
                 {% else %}
-                    {{ login_form.Email(class="form-control form-control-lg") }}
+                    {{ form.Email(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
             <div class="form-group">
-                {{ login_form.Password.label(class="form-control-label")}}
-                {% if login_form.Password.errors %}
-                    {{ login_form.Password(class="form-control form-control-lg is-invalid") }}
+                {{ form.Password.label(class="form-control-label")}}
+                {% if form.Password.errors %}
+                    {{ form.Password(class="form-control form-control-lg is-invalid") }}
                     <div class="invalid-feedback">
-                        {% for error in login_form.Password.errors %}
+                        {% for error in form.Password.errors %}
                             <span>{{ error }}</span>
                         {% endfor %}
                     </div>
                 {% else %}
-                    {{ login_form.Password(class="form-control form-control-lg") }}
+                    {{ form.Password(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
             <div class="form-check">
-                {{ login_form.remember(class="form-check-input") }}
-                {{ login_form.remember.label(class="form-check-label") }}
+                {{ form.Remember(class="form-check-input") }}
+                {{ form.Remember.label(class="form-check-label") }}
             </div>
             <small class="text-muted ml-2">
                 <a href="#">Forgot password?</a>
             </small>
         </fieldset>
         <div class="form-group">
-                {{ login_form.submit(class="btn btn-outline-info") }}
+                {{ form.Submit(class="btn btn-outline-info") }}
             </div>
             <small class="text-muted ml-2">
                 <a href="#">Forgot Password?</a>

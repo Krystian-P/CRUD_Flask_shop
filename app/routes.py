@@ -15,15 +15,15 @@ def welcome_page():     #Strona startowa
 def login_page():       # Strona logowania
     if current_user.is_authenticated:
         return redirect(url_for('home'))
-    loginform = LogIn()
-    if loginform.validate_on_submit():
-        user = User.query.filter_by(email= loginform.Email.data).first()
-        if user is not None and bcrypt.check_password_hash(user.password, loginform.Password.data):
-            login_user(user, remember=loginform.remember.data)
+    form = LogIn()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email= form.Email.data).first()
+        if user is not None and bcrypt.check_password_hash(user.password, form.Password.data):
+            login_user(user, remember=form.Remember.data)
             return redirect(url_for('welcome_page'))
         else:
             flash('Login unsuccessful. Pleas check email and password', 'danger')
-    return render_template("log-in.html", login_form=loginform)
+    return render_template("log-in.html", form=form)
 
 
 @app.route("/sing-in", methods=["GET", "POST"])
@@ -33,12 +33,12 @@ def sing_in_page():     # Strona rejestracji
     form = SignIn()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.Password.data).decode('utf-8')
-        user = User(login = form.Login.data, password=hashed_password, email=form.Email.data)
+        user = User(username = form.Login.data, password=hashed_password, email=form.Email.data)
         db.session.add(user)
         db.session.commit()
         flash(f'Your  account has been created!', 'success')
         return redirect(url_for('login_page'))
-    return render_template("sing-in.html", title='Register', signin_form=form)
+    return render_template("sing-in.html", title='Register', form=form)
 
 
 @app.route("/user-profile.html", methods=["GET", "POST"])
