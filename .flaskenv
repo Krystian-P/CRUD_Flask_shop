@@ -1,1 +1,1 @@
-FLASK_APP=flask_shop
+FLASK_APP=create_db.py
