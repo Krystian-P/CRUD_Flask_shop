@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms.validators import *
+from flask_login import current_user
 from wtforms import *
 from app.models import User
 from email_validator import validate_email
@@ -29,3 +30,26 @@ class SignIn(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('That email is taken. Please choose a different one.')
+
+
+class UpdateAccountForm(FlaskForm):
+    Login = TextField("Login", validators=[DataRequired(), Length(min=5)])
+    Email = TextField("Email", validators=[DataRequired(), Length(min=4), Email()])
+    Submit = SubmitField('Update')
+
+    def validate_username(self, Login):
+        if Login.data != current_user.Login:
+            user= User.query.filter_by(username=Login.data).first()
+            if user:
+                raise ValidationError('That username is taken. Please choose a different one.')
+
+    def validate_email(self, Email):
+        if Email.data != current_user.Email:
+            email = Email.query.filter_by(email=Email.data).first()
+            if email:
+                raise ValidationError('That email is taken. Please choose a differnt one.')
+
+
+class PostForm(FlaskForm):
+    content = TextAreaField('Review', validators=[DataRequired()])
+    submit = SubmitField('Post')

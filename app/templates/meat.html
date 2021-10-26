@@ -1,0 +1,45 @@
+{% extends "index.html" %}
+{% block content %}
+    <div class="row">
+    <div class="col-lg-12 mb-4">
+        <div class="card h-100 text-center">
+            <img src="https://s6.tvp.pl/images2/6/1/2/uid_6122eeb14d513c9442b79d4cbd18f9171570005841594_width_1280_play_0_pos_0_gs_0_height_720_eksperci-przestrzegaja-przed-przetworzonym-miesem-fot-shutterstocklisovskaya-natalia.jpg" class="img-fluid" alt="Responsive image">
+        </div>
+    </div>
+</div>
+<div class="content-section">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">{{ legend }}</legend>
+            <div class="form-group">
+                {{ form.content.label(class="form-control-label") }}
+                {% if form.content.errors %}
+                    {{ form.content(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.content.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.content(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+    </form>
+</div>
+    {% for review in reviews %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ review.author.username }}</a>
+              <small class="text-muted">{{ review.post_date.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <p class="article-content">{{ review.content }}</p>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock %}

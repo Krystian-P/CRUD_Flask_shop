@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from app import app, db, bcrypt
-from app.forms import LogIn, SignIn
-from app.models import User
+from app.forms import LogIn, SignIn, PostForm
+from app.models import User, Review
 from flask_login import login_user,current_user, logout_user, login_required
 
 
@@ -41,9 +41,23 @@ def sing_in_page():     # Strona rejestracji
     return render_template("sing-in.html", title='Register', form=form)
 
 
-@app.route("/user-profile.html", methods=["GET", "POST"])
+@app.route("/user-profile", methods=["GET", "POST"])
 def user_profile_page():       # Dane urzytkownika
     return render_template("user-profile.html")
+
+
+@app.route("/meat", methods=["GET", "POST"])
+#@login_required
+def meat():       # Dane urzytkownika
+    form=PostForm()
+    if form.validate_on_submit():
+        review = Review(content=form.content.data, author=current_user)
+        db.session.add(review)
+        db.session.commit()
+        flash('Your post has been created!', 'success')
+        return redirect(url_for('meat'))
+    review = Review.query.all()
+    return render_template("meat.html", form=form, reviews=review)
 
 if __name__ == '__main__':
     app.run(debug=True)
