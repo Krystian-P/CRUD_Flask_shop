@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from app import app, db, bcrypt
 from app.forms import LogIn, SignIn, PostForm, UpdateAccountForm
-from app.models import User, Review
+from app.models import User, Review, Vege_Review
 from flask_login import login_user,current_user, logout_user, login_required
 
 
@@ -72,16 +72,16 @@ def meat():       # Dane urzytkownika
 
 
 @app.route("/vege", methods=["GET", "POST"])
-#@login_required
+@login_required
 def vege():       # Dane urzytkownika
     form=PostForm()
     if form.validate_on_submit():
-        review = Review(content=form.content.data, author=current_user)
-        db.session.add(review)
+        vege_review = Vege_Review(content=form.content.data, author=current_user)
+        db.session.add(vege_review)
         db.session.commit()
         flash('Your post has been created!', 'success')
         return redirect(url_for('vege'))
-    review = Review.query.all()
+    review = Vege_Review.query.all()
     return render_template("vege.html", form=form, reviews=review)
 
 
@@ -89,6 +89,23 @@ def vege():       # Dane urzytkownika
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+
+@app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_post(post_id):
+    post = Vege_Review.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit():
+        post.content = form.content.data
+        db.session.commit()
+        flash('Your post has been updated!', 'success')
+        return redirect(url_for('vege'))
+    elif request.method == 'GET':
+        form.content.data = post.content
+    return render_template('create_post.html', title='Update Post', form=form, legend='Update Post')
 
 
 if __name__ == '__main__':
