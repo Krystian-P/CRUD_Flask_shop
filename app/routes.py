@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from app import app, db, bcrypt
-from app.forms import LogIn, SignIn, PostForm
+from app.forms import LogIn, SignIn, PostForm, UpdateAccountForm
 from app.models import User, Review
 from flask_login import login_user,current_user, logout_user, login_required
 
@@ -8,7 +8,7 @@ from flask_login import login_user,current_user, logout_user, login_required
 
 @app.route("/")
 def welcome_page():     #Strona startowa
-    return render_template("welcome.html")
+    return render_template("home.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -29,7 +29,7 @@ def login_page():       # Strona logowania
 @app.route("/sing-in", methods=["GET", "POST"])
 def sing_in_page():     # Strona rejestracji
     if current_user.is_authenticated:
-        return redirect(url_for('welcome_page'))
+        return redirect(url_for('home'))
     form = SignIn()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.Password.data).decode('utf-8')
@@ -42,12 +42,23 @@ def sing_in_page():     # Strona rejestracji
 
 
 @app.route("/user-profile", methods=["GET", "POST"])
-def user_profile_page():       # Dane urzytkownika
-    return render_template("user-profile.html")
+@login_required
+def user_profile_page():
+    form = UpdateAccountForm()
+    if form.validate_on_submit():
+        current_user.username=form.Login.data
+        current_user.email=form.Email.data
+        db.session.commit()
+        flash('Your account has been updated', 'success')
+        return redirect(url_for('user_profile_page'))
+    elif request.method == 'GET':
+        form.Login.data = current_user.username
+        form.Email.data = current_user.email
+    return render_template("user-profile.html", title='Account', form=form)
 
 
 @app.route("/meat", methods=["GET", "POST"])
-#@login_required
+@login_required
 def meat():       # Dane urzytkownika
     form=PostForm()
     if form.validate_on_submit():
@@ -58,6 +69,27 @@ def meat():       # Dane urzytkownika
         return redirect(url_for('meat'))
     review = Review.query.all()
     return render_template("meat.html", form=form, reviews=review)
+
+
+@app.route("/vege", methods=["GET", "POST"])
+#@login_required
+def vege():       # Dane urzytkownika
+    form=PostForm()
+    if form.validate_on_submit():
+        review = Review(content=form.content.data, author=current_user)
+        db.session.add(review)
+        db.session.commit()
+        flash('Your post has been created!', 'success')
+        return redirect(url_for('vege'))
+    review = Review.query.all()
+    return render_template("vege.html", form=form, reviews=review)
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
